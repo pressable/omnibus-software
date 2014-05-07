@@ -69,7 +69,7 @@ build do
   #####################################################################
   block do
     project = self.project
-    if project.name == "chef"
+    if project.name == "chef" || project.name == "chef-container"
       git_cmd = "git describe --tags"
       src_dir = self.project_dir
       shell = Mixlib::ShellOut.new(git_cmd,
@@ -117,7 +117,7 @@ build do
   # change that switched the template syntax checking to native ruby code.
   # Not having (2) does not create symlinks for binaries under
   # #{install_dir}/bin which gets created by appbundler later on.
-  if project.name == "chef"
+  if project.name == "chef" || project.name == "chef-container"
     # install chef first so that ohai gets installed into /opt/chef/bin/ohai
     rake "gem", :env => env.merge({"PATH" => "#{install_dir}/embedded/bin:#{ENV['PATH']}"})
 
