@@ -1,5 +1,5 @@
 #
-# Copyright:: Copyright (c) 2012-2014 Chef Software, Inc.
+# Copyright:: Copyright (c) 2014 Chef Software, Inc.
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,15 +15,13 @@
 # limitations under the License.
 #
 
-name "bundler"
-default_version "1.5.3"
+name "dep-selector-libgecode"
+default_version "1.0.0"
 
-if platform == 'windows'
-  dependency "ruby-windows"
-else
-  dependency "rubygems"
-end
+dependency "bundler"
 
 build do
-  gem "install bundler --no-rdoc --no-ri -v '#{version}'"
+  path_key = ENV.keys.grep(/\Apath\Z/i).first
+
+  gem "install dep-selector-libgecode --no-rdoc --no-ri -v '#{version}'",  :env => {path_key => path_with_embedded }
 end
