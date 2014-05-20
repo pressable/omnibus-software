@@ -19,7 +19,7 @@ name "chef"
 
 dependency "ruby"
 dependency "rubygems"
-dependency "yajl"
+dependency "libffi"
 dependency "bundler"
 
 default_version "master"
@@ -44,7 +44,7 @@ env =
   else
     {
       "CFLAGS" => "-L#{install_dir}/embedded/lib -I#{install_dir}/embedded/include",
-      "LDFLAGS" => "-Wl,-rpath #{install_dir}/embedded/lib -L#{install_dir}/embedded/lib -I#{install_dir}/embedded/include"
+      "LDFLAGS" => "-Wl,-rpath,#{install_dir}/embedded/lib -L#{install_dir}/embedded/lib -I#{install_dir}/embedded/include"
     }
   end
 

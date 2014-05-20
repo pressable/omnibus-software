@@ -21,13 +21,11 @@ default_version "3.0.13"
 dependency "libgcc"
 dependency "libtool"
 
-# TODO: this link is subject to change with each new release of zlib.
-#       we'll need to use a more robust link (sourceforge) that will
-#       not change over time.
 source :url => "ftp://sourceware.org/pub/libffi/libffi-3.0.13.tar.gz",
        :md5 => '45f3b6dbc9ee7c7dfbbbc5feba571529'
 
 relative_path "libffi-3.0.13"
+
 configure_env =
   case platform
   when "aix"
@@ -46,11 +44,11 @@ configure_env =
   when "solaris2"
     {
       "LDFLAGS" => "-R#{install_dir}/embedded/lib -L#{install_dir}/embedded/lib -I#{install_dir}/embedded/include",
-      "CFLAGS" => "-I#{install_dir}/embedded/include -L#{install_dir}/embedded/lib -DNO_VIZ"
+      "CFLAGS" => "-I#{install_dir}/embedded/include -L#{install_dir}/embedded/lib"
     }
   else
     {
-      "LDFLAGS" => "-Wl,-rpath #{install_dir}/embedded/lib -L#{install_dir}/embedded/lib -I#{install_dir}/embedded/include",
+      "LDFLAGS" => "-Wl,-rpath,#{install_dir}/embedded/lib -L#{install_dir}/embedded/lib -I#{install_dir}/embedded/include",
       "CFLAGS" => "-I#{install_dir}/embedded/include -L#{install_dir}/embedded/lib"
     }
   end
@@ -59,13 +57,14 @@ build do
   command "./configure --prefix=#{install_dir}/embedded", :env => configure_env
   command "make -j #{max_build_jobs}"
   command "make -j #{max_build_jobs} install"
-  # libffi's default install location of header files is aweful...
+  # libffi's default install location of header files is awful...
   command "cp -f #{install_dir}/embedded/lib/libffi-3.0.13/include/* #{install_dir}/embedded/include"
 
-  # On centos libffi libraries are places under /embedded/lib64
+  # On 64-bit centos, libffi libraries are places under /embedded/lib64
   # move them over to lib
-  if platform == "centos"
+  if platform == "centos" && OHAI[:kernel][:machine] == "x86_64"
     command "mv #{install_dir}/embedded/lib64/* #{install_dir}/embedded/lib/"
     command "rm -rf #{install_dir}/embedded/lib64"
   end
 end
+
