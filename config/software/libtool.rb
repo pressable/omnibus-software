@@ -30,23 +30,41 @@ source url: "http://ftp.gnu.org/gnu/libtool/libtool-#{version}.tar.gz"
 
 relative_path "libtool-#{version}"
 
-build do
-  env = case platform
-        when "aix"
-        {
-            "LDFLAGS" => "-L#{install_dir}/embedded/lib -Wl,-blibpath:#{install_dir}/embedded/lib:/usr/lib:/lib",
-            "CFLAGS" => "-maix64 -O -I#{install_dir}/embedded/include",
-            "OBJECT_MODE" => "64",
-            "CC" => "gcc -maix64",
-            "CXX" => "g++ -maix64",
-        }
+env =
+  case platform
+  when "aix"
+    { # NONSTANDARD: uses gcc/g++ instead of xlc/xlC
+      "CC" => "gcc -maix64",
+      "CXX" => "g++ -maix64",
+      "LD" => "ld -b64",
+      "CFLAGS" => "-maix64 -O -I#{install_dir}/embedded/include"
+      "OBJECT_MODE" => "64",
+      "ARFLAGS" => "-X64 cru",
+      "LDFLAGS" => "-L#{install_dir}/embedded/lib -Wl,-blibpath:#{install_dir}/embedded/lib:/usr/lib:/lib",
+    }
+  when "mac_os_x"
+    {
+      "LDFLAGS" => "-L#{install_dir}/embedded/lib",
+      "CFLAGS" => "-I#{install_dir}/embedded/include",
+    }
+  when "solaris2"
+    {
+      "LDFLAGS" => "-R#{install_dir}/embedded/lib -L#{install_dir}/embedded/lib -static-libgcc",
+      "CFLAGS" => "-I#{install_dir}/embedded/include",
+    }
+  else
+    {
+      "LDFLAGS" => "-Wl,-rpath,#{install_dir}/embedded/lib -L#{install_dir}/embedded/lib",
+      "CFLAGS" => "-I#{install_dir}/embedded/include",
+    }
   end
+
+build do
   if platform == "aix"
     command "./configure --prefix=#{install_dir}/embedded --with-gcc", :env => env
-    command "make", :env => env
   else
-    command "./configure --prefix=#{install_dir}/embedded"
-    command "make"
+    command "./configure --prefix=#{install_dir}/embedded", :env => env
   end
-  command "make install"
+  command "make", :env => env
+  command "make install", :env => env
 end
