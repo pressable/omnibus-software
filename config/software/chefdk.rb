@@ -54,6 +54,7 @@ build do
   env = with_embedded_path(env)
 
   def appbuilder(app_path, bin_path)
+    gemfile = File.join(app_path, "Gemfile.lock")
     env = {
       'RUBYOPT'         => nil,
       'BUNDLE_BIN_PATH' => nil,
@@ -62,7 +63,6 @@ build do
       'GEM_HOME'        => nil,
     }
     env = with_embedded_path(env)
-    gemfile = File.join(app_path, "Gemfile.lock")
     command("#{install_dir}/embedded/bin/appbundler #{app_path} #{bin_path}", :env => env)
   end
 
