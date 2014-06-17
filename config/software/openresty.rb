@@ -28,7 +28,9 @@ source :url => "http://openresty.org/download/ngx_openresty-#{version}.tar.gz",
 relative_path "ngx_openresty-#{version}"
 
 build do
+
   env = {
+    "PATH" => "/sbin:#{install_dir}/embedded/bin/:#{ENV['PATH']}",
     "LDFLAGS" => "-L#{install_dir}/embedded/lib -I#{install_dir}/embedded/include",
     "CFLAGS" => "-L#{install_dir}/embedded/lib -I#{install_dir}/embedded/include",
     "LD_RUN_PATH" => "#{install_dir}/embedded/lib"
