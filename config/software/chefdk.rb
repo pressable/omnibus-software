@@ -49,7 +49,6 @@ build do
     # NOKOGIRI_USE_SYSTEM_LIBRARIES until rubocop stops doing that
     "PKG_CONFIG_PATH" => "#{install_dir}/embedded/lib/pkgconfig",
     "NOKOGIRI_USE_SYSTEM_LIBRARIES" => "true",
-    path_key => path
   }
 
   env = with_embedded_path(env)
@@ -61,7 +60,6 @@ build do
       'BUNDLE_GEMFILE'  => gemfile,
       'GEM_PATH'        => nil,
       'GEM_HOME'        => nil,
-      path_key          => path
     }
     env = with_embedded_path(env)
     gemfile = File.join(app_path, "Gemfile.lock")
