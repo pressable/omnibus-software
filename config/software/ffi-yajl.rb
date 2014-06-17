@@ -30,7 +30,7 @@ else
   dependency "rubygems"
 end
 
-env = { path_key => path_with_embedded }
+env = with_embedded_path()
 
 build do
   bundle "install --without development_extras", :env => env
