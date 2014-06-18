@@ -1,5 +1,5 @@
 #
-# Copyright:: Copyright (c) 2012 Opscode, Inc.
+# Copyright:: Copyright (c) 2012-2014 Chef Software, Inc.
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,11 +16,17 @@
 #
 
 name "cacerts"
-version "2012.12.19-1"  # date of the file is in a comment at the start
+default_version "2014.04.22"  # date of the file is in a comment at the start, or in the changelog
 
-source :url => "http://curl.haxx.se/ca/cacert.pem",
-       :md5 => '349ba2d6964db9ca558c9e1daf38e428'
+version "2014.04.22" do
+  source :md5 => "9f92a0d9f605e227ae068e605f4c86fa"
+end
 
+version "2014.01.28" do
+  source :md5 => "5d108f8ab86afacc6663aafca8604dd3"
+end
+
+source :url => "http://curl.haxx.se/ca/cacert.pem"
 relative_path "cacerts-#{version}"
 
 build do
